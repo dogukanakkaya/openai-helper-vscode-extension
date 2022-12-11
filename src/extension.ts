@@ -1,13 +1,38 @@
 import * as vscode from 'vscode';
-import { sendMessage } from './chatgpt';
+import { ChatGPTAPI } from 'chatgpt';
 
 const CHATGPT_REGEX = /^\/\/ @chat.*$/gm;
 const MARKDOWN_REGEX = /```[\s\S]*?```/g;
 const WAIT_TEXT = "[Generating, please wait...]";
 const MESSAGE_REQUESTS: string[] = [];
 
+let api: ChatGPTAPI | null = null;
+
+export const createAPI = async () => {
+	if (!api) {
+		const sessionToken = await vscode.window.showInputBox({ prompt: "Enter your ChatGPT Session Token" });
+		if (!sessionToken) {
+			vscode.window.showErrorMessage('A session token is required.');
+			throw new Error();
+		}
+
+		return new ChatGPTAPI({ sessionToken });
+	}
+
+	return api;
+};
+
 export function activate(context: vscode.ExtensionContext) {
 	const disposable = vscode.commands.registerCommand('chatgpt-code.run', async () => {
+		try {
+			api = await createAPI();
+			await api.ensureAuth();
+		} catch (err) {
+			api = null;
+			vscode.window.showErrorMessage('Invalid session token.');
+			return;
+		}
+
 		const editor = vscode.window.activeTextEditor;
 
 		if (editor) {
@@ -34,7 +59,7 @@ export function activate(context: vscode.ExtensionContext) {
 				if (MESSAGE_REQUESTS.includes(text)) return;
 
 				MESSAGE_REQUESTS.push(text);
-				const response = await sendMessage(text);
+				const response = await api.sendMessage(text);
 
 				const markdownMatches = response.match(MARKDOWN_REGEX);
 
