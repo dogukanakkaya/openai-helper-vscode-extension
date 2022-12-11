@@ -13,4 +13,5 @@ This extension helps you to use ChatGPT in Visual Studio Code
 
 - [ ] Run multiple `@chat` comments in parallel
 - [ ] Stream the response instead of waiting for it to be finished
+- [ ] Ability to create conversation and change the generated responses
 - [ ] Write test
