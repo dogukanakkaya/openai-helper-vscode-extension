@@ -1,5 +1,3 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { sendMessage } from './chatgpt';
 
@@ -8,8 +6,6 @@ const MARKDOWN_REGEX = /```[\s\S]*?```/g;
 const WAIT_TEXT = "[Generating, please wait...]";
 const MESSAGE_REQUESTS: string[] = [];
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 	const disposable = vscode.commands.registerCommand('chatgpt-code.run', async () => {
 		const editor = vscode.window.activeTextEditor;
@@ -64,5 +60,4 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposable);
 }
 
-// This method is called when your extension is deactivated
 export function deactivate() { }
