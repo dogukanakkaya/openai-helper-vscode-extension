@@ -1,22 +1,64 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { sendMessage } from './chatgpt';
+
+const CHATGPT_REGEX = /^\/\/ @chat.*$/gm;
+const MARKDOWN_REGEX = /```[\s\S]*?```/g;
+const WAIT_TEXT = "[Generating, please wait...]";
+const MESSAGE_REQUESTS: string[] = [];
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+	const disposable = vscode.commands.registerCommand('chatgpt-code.run', async () => {
+		const editor = vscode.window.activeTextEditor;
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "chatgpt-code" is now active!');
+		if (editor) {
+			let document = editor.document;
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('chatgpt-code.run', async () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from ChatGPT Code!');
+			const documentText = document.getText();
+
+			const matches = documentText.match(CHATGPT_REGEX);
+
+			if (!matches) return;
+
+			for (const match of matches) {
+				const index = documentText.indexOf(match);
+				const startPos = editor.document.positionAt(index);
+				const endPos = editor.document.positionAt(index + match.length);
+				const range = new vscode.Range(startPos, endPos);
+
+				const matchWaitText = `${match} ${WAIT_TEXT}`;
+				editor.edit(editBuilder => editBuilder.replace(range, matchWaitText));
+
+				const text = match.replace("// @chat", "");
+
+				// prevent the next request to be sent if it's still waiting for response
+				if (MESSAGE_REQUESTS.includes(text)) return;
+
+				MESSAGE_REQUESTS.push(text);
+				const response = await sendMessage(text);
+
+				const markdownMatches = response.match(MARKDOWN_REGEX);
+
+				if (!markdownMatches) return;
+
+				let output = '';
+
+				for (const markdownMatch of markdownMatches) {
+					output += markdownMatch.slice(3, -3);
+				}
+
+				editor.edit(editBuilder => {
+					const endPos = editor.document.positionAt(index + matchWaitText.length);
+					const range = new vscode.Range(startPos, endPos);
+					editBuilder.replace(range, output);
+				});
+
+				MESSAGE_REQUESTS.splice(MESSAGE_REQUESTS.indexOf(text), 1);
+			}
+		}
 	});
 
 	context.subscriptions.push(disposable);
