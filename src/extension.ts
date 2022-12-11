@@ -11,10 +11,7 @@ let api: ChatGPTAPI | null = null;
 export const createAPI = async () => {
 	if (!api) {
 		const sessionToken = await vscode.window.showInputBox({ prompt: "Enter your ChatGPT Session Token" });
-		if (!sessionToken) {
-			vscode.window.showErrorMessage('A session token is required.');
-			throw new Error();
-		}
+		if (!sessionToken) throw new Error();
 
 		return new ChatGPTAPI({ sessionToken });
 	}
