@@ -1,8 +1,9 @@
 {
   "name": "chatgpt-code",
   "displayName": "ChatGPT Code",
-  "description": "",
+  "description": "This extension helps you to use ChatGPT in Visual Studio Code",
   "version": "0.0.1",
+  "icon": "https://user-images.githubusercontent.com/51231605/206904946-da7b1989-88eb-4542-a283-244f29a99906.png",
   "engines": {
     "vscode": "^1.74.0"
   },
