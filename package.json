@@ -45,6 +45,9 @@
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
+    "@babel/core": "^7.20.5",
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@babel/preset-env": "^7.20.2",
     "@types/glob": "^8.0.0",
     "@types/mocha": "^10.0.1",
     "@types/node": "16.x",
@@ -52,6 +55,7 @@
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
     "@vscode/test-electron": "^2.2.0",
+    "babel-loader": "^9.1.0",
     "chatgpt": "^2.2.0",
     "eslint": "^8.28.0",
     "glob": "^8.0.3",
