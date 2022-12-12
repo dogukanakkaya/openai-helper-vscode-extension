@@ -1,5 +1,6 @@
 # ChatGPT Code
 This extension helps you to use ChatGPT in Visual Studio Code
+> ! At 11/12 OpenAI added additional Cloudflare protections so did the ChatGPT API. You may have some crashes until the changes also made in extension.
 
 ![chatgpt-code](https://user-images.githubusercontent.com/51231605/206903953-ea61df84-ca6a-485e-b153-facd4f3ae598.gif)
 
