@@ -5,6 +5,7 @@
   "version": "0.0.3",
   "icon": "icon.png",
   "publisher": "dogukanakkaya",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/dogukanakkaya/chatgpt-code-vscode-extension"
@@ -16,14 +17,19 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:chatgpt-code.run"
+    "onCommand:chatgpt-code.generate",
+    "onCommand:chatgpt-code.refactor"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "chatgpt-code.run",
-        "title": "ChatGPT Code"
+        "command": "chatgpt-code.generate",
+        "title": "ChatGPT Code: Generate @chat"
+      },
+      {
+        "command": "chatgpt-code.refactor",
+        "title": "ChatGPT Code: Refactor Selection"
       }
     ]
   },
@@ -46,7 +52,7 @@
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
     "@vscode/test-electron": "^2.2.0",
-    "chatgpt": "^2.0.6",
+    "chatgpt": "^2.3.0",
     "eslint": "^8.28.0",
     "glob": "^8.0.3",
     "mocha": "^10.1.0",

@@ -6,29 +6,41 @@ const MARKDOWN_REGEX = /```[\s\S]*?```/g;
 const WAIT_TEXT = "[Generating, please wait...]";
 const MESSAGE_REQUESTS: string[] = [];
 
+
 let api: ChatGPTAPI | null = null;
 
-export const createAPI = async () => {
+export const getAPI = async () => {
 	if (!api) {
-		const sessionToken = await vscode.window.showInputBox({ prompt: "Enter your ChatGPT Session Token" });
-		if (!sessionToken) throw new Error();
+		const sessionToken = await vscode.window.showInputBox({ prompt: "Enter session token", ignoreFocusOut: true, });
+		const clearanceToken = await vscode.window.showInputBox({ prompt: "Enter clearance token", ignoreFocusOut: true, });
 
-		return new ChatGPTAPI({ sessionToken });
+		if (!sessionToken || !clearanceToken) throw new Error('Invalid session/clearance token.');
+
+		api = new ChatGPTAPI({ sessionToken, clearanceToken });
+	}
+
+	try {
+		await api.ensureAuth();
+	} catch (err) {
+		api = null;
+		throw err;
 	}
 
 	return api;
 };
 
-export function activate(context: vscode.ExtensionContext) {
-	const disposable = vscode.commands.registerCommand('chatgpt-code.run', async () => {
-		try {
-			api = await createAPI();
-			await api.ensureAuth();
-		} catch (err) {
-			api = null;
-			vscode.window.showErrorMessage('Invalid session token.');
-			return;
-		}
+export async function activate(context: vscode.ExtensionContext) {
+	context.subscriptions.push(
+		generateCommand(),
+		refactorCommand()
+	);
+}
+
+export function deactivate() { }
+
+export const generateCommand = () => {
+	return vscode.commands.registerCommand('chatgpt-code.generate', async () => {
+		const api = await getAPI();
 
 		const editor = vscode.window.activeTextEditor;
 
@@ -78,8 +90,22 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 		}
 	});
+};
 
-	context.subscriptions.push(disposable);
-}
+export const refactorCommand = () => {
+	return vscode.commands.registerCommand('chatgpt-code.refactor', async () => {
+		api = await getAPI();
 
-export function deactivate() { }
+		if (!api) return;
+
+		const editor = vscode.window.activeTextEditor;
+
+		if (editor) {
+			let document = editor.document;
+
+			const documentText = document.getText();
+
+
+		}
+	});
+};
