@@ -1,11 +1,12 @@
 import * as vscode from 'vscode';
+import { ChatGPTAPI } from 'chatgpt';
 
 const CHATGPT_REGEX = /^\/\/ @chat.*$/gm;
 const MARKDOWN_REGEX = /```[\s\S]*?```/g;
 const WAIT_TEXT = "[Generating, please wait...]";
 const MESSAGE_REQUESTS: string[] = [];
 
-let api: import('chatgpt').ChatGPTAPI | null = null;
+let api: ChatGPTAPI | null = null;
 
 export const getAPI = async () => {
 	if (!api) {
@@ -14,9 +15,7 @@ export const getAPI = async () => {
 
 		if (!sessionToken || !clearanceToken) throw new Error('Invalid session/clearance token.');
 
-		// chatgpt is an esm only module so this is a work around to compile to commonjs
-		const mod = await (eval(`import('chatgpt')`) as Promise<typeof import('chatgpt')>);
-		api = new mod.ChatGPTAPI({ sessionToken, clearanceToken });
+		api = new ChatGPTAPI({ sessionToken, clearanceToken });
 	}
 
 	try {
