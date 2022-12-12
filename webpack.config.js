@@ -28,7 +28,6 @@ const extensionConfig = {
     }
   ],
   resolve: {
-    // support reading TypeScript and JavaScript files, 📖 -> https://github.com/TypeStrong/ts-loader
     extensions: ['.ts', '.js']
   },
   module: {
@@ -38,13 +37,10 @@ const extensionConfig = {
         exclude: /node_modules/,
         use: [
           {
-            loader: 'ts-loader'
-          },
-          {
             loader: 'babel-loader',
             options: {
-              presets: ['@babel/preset-env'],
-              plugins: ["@babel/plugin-syntax-dynamic-import"]
+              presets: ['@babel/preset-env', '@babel/preset-typescript'],
+              plugins: ['@babel/plugin-syntax-dynamic-import']
             }
           }
         ]
