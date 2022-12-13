@@ -1,23 +1,19 @@
 {
-    "root": true,
     "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaVersion": 6,
-        "sourceType": "module"
-    },
-    "plugins": [
-        "@typescript-eslint"
-    ],
+    "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
     "rules": {
-        "@typescript-eslint/naming-convention": "warn",
-        "@typescript-eslint/semi": "warn",
-        "eqeqeq": "warn",
-        "no-throw-literal": "warn",
-        "semi": "off"
-    },
-    "ignorePatterns": [
-        "out",
-        "dist",
-        "**/*.d.ts"
-    ]
-}
+      "jsx-quotes": ["error", "prefer-double"],
+      "indent": ["error", 2],
+      "quotes": ["error", "single"],
+      "semi": ["error", "always"],
+      "comma-dangle": ["error", "never"],
+      "no-multiple-empty-lines": [
+        "error",
+        { "max": 1, "maxEOF": 0, "maxBOF": 0 }
+      ],
+      "padded-blocks": ["error", "never"],
+      "@typescript-eslint/ban-ts-comment": "off",
+      "require-await": "error",
+      "object-curly-spacing": ["error", "always"]
+    }
+  }

@@ -1,125 +1,119 @@
 import * as vscode from 'vscode';
-import { ChatGPTAPI } from 'chatgpt';
 import { getChatLines, getMarkdowns } from './utils/regex';
+import ChatGPT from './chatgpt';
+import { MESSAGES } from './config';
 
-const MESSAGES = Object.freeze({
-	GENERATING: '[Generating, please wait...]',
-	REFACTORING: '[Refactoring, please wait...]',
-	NO_MARKDOWN: 'ChatGPT did not returned any piece of code.',
-	NO_CHAT_LINE: 'You did not write down any `@chat` comment lines',
-	NO_SELECTION: 'You did not select a code'
-});
 const CHAT_LINE_REQUESTS: string[] = [];
 
-let api: ChatGPTAPI | null = null;
+let chatgpt: ChatGPT | null = null;
 
-export const getAPI = async () => {
-	if (!api) {
-		const sessionToken = await vscode.window.showInputBox({ prompt: "Enter session token", ignoreFocusOut: true, });
-		const clearanceToken = await vscode.window.showInputBox({ prompt: "Enter clearance token", ignoreFocusOut: true, });
+const askOrThrow = async (name: string) => {
+  const response = await vscode.window.showInputBox({ prompt: `Enter ${name}`, ignoreFocusOut: true });
+  if (!response) throw new Error(`Invalid ${name}`);
 
-		if (!sessionToken || !clearanceToken) throw new Error('Invalid session/clearance token.');
-
-		api = new ChatGPTAPI({ sessionToken, clearanceToken });
-	}
-
-	try {
-		await api.ensureAuth();
-	} catch (err) {
-		api = null;
-		throw err;
-	}
-
-	return api;
+  return response;
 };
 
-export const generateCommand = () => {
-	return vscode.commands.registerCommand('chatgpt-code.generate', async () => {
-		const api = await getAPI();
+export const getChatGPT = async () => {
+  if (!chatgpt) {
+    const sessionToken = await askOrThrow('session token');
+    const clearanceToken = await askOrThrow('clearance token');
+    chatgpt = new ChatGPT({ sessionToken, clearanceToken });
 
-		const editor = vscode.window.activeTextEditor;
-		if (!editor) return;
+    try {
+      await chatgpt.api.ensureAuth();
+    } catch (err) {
+      chatgpt = null;
+      throw err;
+    }
+  }
 
-		const documentText = editor.document.getText();
-
-		const chatLines = getChatLines(documentText);
-		if (!chatLines) {
-			vscode.window.showInformationMessage(MESSAGES.NO_CHAT_LINE);
-			return;
-		}
-
-		for (const chatLine of chatLines) {
-			const index = documentText.indexOf(chatLine);
-
-			editor.edit(editBuilder => {
-				const startLine = editor.document.lineAt(editor.document.positionAt(index).line);
-				editBuilder.insert(startLine.range.end, ` ${MESSAGES.GENERATING}`);
-			});
-
-			const chatText = chatLine.replace("// @chat", "");
-
-			// prevent the next request to be sent if it's still waiting for response
-			if (CHAT_LINE_REQUESTS.includes(chatText)) return;
-			CHAT_LINE_REQUESTS.push(chatText);
-
-			const response = await api.sendMessage(chatText);
-
-			const markdowns = getMarkdowns(response);
-			if (!markdowns) {
-				vscode.window.showErrorMessage(MESSAGES.NO_MARKDOWN);
-				return;
-			}
-
-			editor.edit(editBuilder => {
-				const startLine = editor.document.lineAt(editor.document.positionAt(index).line);
-				editBuilder.replace(startLine.range, markdowns.join(''));
-			});
-
-			CHAT_LINE_REQUESTS.splice(CHAT_LINE_REQUESTS.indexOf(chatText), 1);
-		}
-	});
+  return chatgpt;
 };
 
-export const refactorCommand = () => {
-	return vscode.commands.registerCommand('chatgpt-code.refactor', async () => {
-		const api = await getAPI();
+export const generateCommand = async () => {
+  const chatgpt = await getChatGPT();
 
-		const editor = vscode.window.activeTextEditor;
-		if (!editor) return;
+  const editor = vscode.window.activeTextEditor;
+  if (!editor) return;
 
-		const selection = editor.selection;
-		if (!selection) {
-			vscode.window.showInformationMessage(MESSAGES.NO_SELECTION);
-			return;
-		};
+  const documentText = editor.document.getText();
 
-		editor.edit(editBuilder => editBuilder.insert(selection.start, `// ${MESSAGES.REFACTORING}\n`));
+  const chatLines = getChatLines(documentText);
+  if (!chatLines) {
+    vscode.window.showInformationMessage(MESSAGES.NO_CHAT_LINE);
+    return;
+  }
 
-		const selectionText = editor.document.getText(selection);
+  for (const chatLine of chatLines) {
+    const index = documentText.indexOf(chatLine);
 
-		const response = await api.sendMessage(`
+    editor.edit(editBuilder => {
+      const startLine = editor.document.lineAt(editor.document.positionAt(index).line);
+      editBuilder.insert(startLine.range.end, ` ${MESSAGES.GENERATING}`);
+    });
+
+    const chatText = chatLine.replace('// @chat', '');
+
+    // prevent the next request to be sent if it's still waiting for response
+    if (CHAT_LINE_REQUESTS.includes(chatText)) return;
+    CHAT_LINE_REQUESTS.push(chatText);
+
+    const response = await chatgpt.api.sendMessage(chatText);
+
+    const markdowns = getMarkdowns(response);
+    if (!markdowns) {
+      vscode.window.showErrorMessage(MESSAGES.NO_MARKDOWN);
+      return;
+    }
+
+    editor.edit(editBuilder => {
+      const startLine = editor.document.lineAt(editor.document.positionAt(index).line);
+      editBuilder.replace(startLine.range, markdowns.join(''));
+    });
+
+    CHAT_LINE_REQUESTS.splice(CHAT_LINE_REQUESTS.indexOf(chatText), 1);
+  }
+};
+
+export const refactorCommand = async () => {
+  const chatgpt = await getChatGPT();
+
+  const editor = vscode.window.activeTextEditor;
+  if (!editor) return;
+
+  const selection = editor.selection;
+  if (!selection) {
+    vscode.window.showInformationMessage(MESSAGES.NO_SELECTION);
+    return;
+  }
+
+  editor.edit(editBuilder => editBuilder.insert(selection.start, `// ${MESSAGES.REFACTORING}\n`));
+
+  const selectionText = editor.document.getText(selection);
+
+  const response = await chatgpt.api.sendMessage(`
 			Can you please refactor this code: 
 			"
 			${selectionText}
 			"
 		`);
 
-		const markdowns = getMarkdowns(response);
-		if (!markdowns) {
-			vscode.window.showErrorMessage(MESSAGES.NO_MARKDOWN);
-			return;
-		}
+  const markdowns = getMarkdowns(response);
+  if (!markdowns) {
+    vscode.window.showErrorMessage(MESSAGES.NO_MARKDOWN);
+    return;
+  }
 
-		editor.edit(editBuilder => {
-			const newEndLine = editor.document.lineAt(selection.end.line + 1);
-			editBuilder.replace(new vscode.Range(selection.start, newEndLine.range.end), markdowns.join(''));
-		});
-	});
+  editor.edit(editBuilder => {
+    const newEndLine = editor.document.lineAt(selection.end.line + 1);
+    editBuilder.replace(new vscode.Range(selection.start, newEndLine.range.end), markdowns.join(''));
+  });
 };
 
-export async function activate(context: vscode.ExtensionContext) {
-	context.subscriptions.push(
-		generateCommand(),
-		refactorCommand()
-	);
+export function activate(context: vscode.ExtensionContext) {
+  context.subscriptions.push(
+    vscode.commands.registerCommand('chatgpt-code.generate', generateCommand),
+    vscode.commands.registerCommand('chatgpt-code.refactor', refactorCommand)
+  );
 }
