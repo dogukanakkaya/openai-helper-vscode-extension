@@ -21,11 +21,22 @@ You can access commands via pressing CMD + Shift + P (CTRL + Shift + P for Windo
 
 <br>
 
+### Create Test
+@todo
+
+<br>
+
+### Analyze Code
+@todo
+
+<br>
+
 ## Todo
 
 - [x] Add refactor selection command
 - [ ] Stream the response instead of waiting for it to be finished
 - [ ] Generate wait texts as placeholders instead of inserting comment lines to file
+- [ ] Analyze selected code and explain (why it's broken etc.)
 - [ ] Add create test for function command
 - [ ] Run multiple `@chat` comments in parallel
 - [ ] Ability to create conversation and change the generated responses
