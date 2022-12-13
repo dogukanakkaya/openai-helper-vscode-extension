@@ -49,9 +49,7 @@ export const generateCommand = () => {
 		const editor = vscode.window.activeTextEditor;
 		if (!editor) return;
 
-		let document = editor.document;
-
-		const documentText = document.getText();
+		const documentText = editor.document.getText();
 
 		const chatLines = getChatLines(documentText);
 		if (!chatLines) {
@@ -63,7 +61,7 @@ export const generateCommand = () => {
 			const index = documentText.indexOf(chatLine);
 
 			editor.edit(editBuilder => {
-				const startLine = document.lineAt(editor.document.positionAt(index).line);
+				const startLine = editor.document.lineAt(editor.document.positionAt(index).line);
 				editBuilder.insert(startLine.range.end, ` ${MESSAGES.GENERATING}`);
 			});
 
@@ -82,7 +80,7 @@ export const generateCommand = () => {
 			}
 
 			editor.edit(editBuilder => {
-				const startLine = document.lineAt(editor.document.positionAt(index).line);
+				const startLine = editor.document.lineAt(editor.document.positionAt(index).line);
 				editBuilder.replace(startLine.range, markdowns.join(''));
 			});
 
@@ -93,14 +91,36 @@ export const generateCommand = () => {
 
 export const refactorCommand = () => {
 	return vscode.commands.registerCommand('chatgpt-code.refactor', async () => {
-		api = await getAPI();
-
-		if (!api) return;
+		const api = await getAPI();
 
 		const editor = vscode.window.activeTextEditor;
+		if (!editor) return;
 
-		if (editor) {
-			// @todo
+		const selection = vscode.window.activeTextEditor?.selection;
+		const selectionText = editor.document.getText(selection);
+		if (!selection) {
+			vscode.window.showInformationMessage(MESSAGES.NO_SELECTION);
+			return;
+		};
+
+		editor.edit(editBuilder => editBuilder.insert(selection.start, `// ${MESSAGES.REFACTORING}\n`));
+
+		const response = await api.sendMessage(`
+			Can you please refactor this code: 
+			"
+			${selectionText}
+			"
+		`);
+
+		const markdowns = getMarkdowns(response);
+		if (!markdowns) {
+			vscode.window.showErrorMessage(MESSAGES.NO_MARKDOWN);
+			return;
 		}
+
+		editor.edit(editBuilder => {
+			const newEndLine = editor.document.lineAt(selection.end.line + 1);
+			editBuilder.replace(new vscode.Range(selection.start, newEndLine.range.end), markdowns.join(''));
+		});
 	});
 };
