@@ -2,7 +2,7 @@
   "name": "chatgpt-code",
   "displayName": "ChatGPT Code",
   "description": "This extension helps you to use ChatGPT in Visual Studio Code",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "icon": "icon.png",
   "publisher": "dogukanakkaya",
   "license": "MIT",

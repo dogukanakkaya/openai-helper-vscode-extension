@@ -16,7 +16,7 @@ This extension helps you to use ChatGPT in Visual Studio Code
 
 ### Todo
 
-- [ ] Add refactor selection command
+- [x] Add refactor selection command
 - [ ] Add create test for function command
 - [ ] Run multiple `@chat` comments in parallel
 - [ ] Stream the response instead of waiting for it to be finished
