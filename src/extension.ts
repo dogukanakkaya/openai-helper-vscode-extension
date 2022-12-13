@@ -87,14 +87,15 @@ export const refactorCommand = () => {
 		const editor = vscode.window.activeTextEditor;
 		if (!editor) return;
 
-		if (!editor.selection) {
+		const selection = editor.selection;
+		if (!selection) {
 			vscode.window.showInformationMessage(MESSAGES.NO_SELECTION);
 			return;
 		};
 
-		editor.edit(editBuilder => editBuilder.insert(editor.selection.start, `// ${MESSAGES.REFACTORING}\n`));
+		editor.edit(editBuilder => editBuilder.insert(selection.start, `// ${MESSAGES.REFACTORING}\n`));
 
-		const selectionText = editor.document.getText(editor.selection);
+		const selectionText = editor.document.getText(selection);
 
 		const response = await api.sendMessage(`
 			Can you please refactor this code: 
@@ -110,8 +111,8 @@ export const refactorCommand = () => {
 		}
 
 		editor.edit(editBuilder => {
-			const newEndLine = editor.document.lineAt(editor.selection.end.line + 1);
-			editBuilder.replace(new vscode.Range(editor.selection.start, newEndLine.range.end), markdowns.join(''));
+			const newEndLine = editor.document.lineAt(selection.end.line + 1);
+			editBuilder.replace(new vscode.Range(selection.start, newEndLine.range.end), markdowns.join(''));
 		});
 	});
 };
