@@ -1,10 +1,15 @@
 import * as vscode from 'vscode';
 import { ChatGPTAPI } from 'chatgpt';
+import { getChatLines, getMarkdowns } from './utils/regex';
 
-const CHATGPT_REGEX = /^\/\/ @chat.*$/gm;
-const MARKDOWN_REGEX = /```[\s\S]*?```/g;
-const WAIT_TEXT = "[Generating, please wait...]";
-const MESSAGE_REQUESTS: string[] = [];
+const MESSAGES = Object.freeze({
+	GENERATING: '[Generating, please wait...]',
+	REFACTORING: '[Refactoring, please wait...]',
+	NO_MARKDOWN: 'ChatGPT did not returned any piece of code.',
+	NO_CHAT_LINE: 'You did not write down any `@chat` comment lines',
+	NO_SELECTION: 'You did not select a code'
+});
+const CHAT_LINE_REQUESTS: string[] = [];
 
 let api: ChatGPTAPI | null = null;
 
@@ -42,51 +47,46 @@ export const generateCommand = () => {
 		const api = await getAPI();
 
 		const editor = vscode.window.activeTextEditor;
+		if (!editor) return;
 
-		if (editor) {
-			let document = editor.document;
+		let document = editor.document;
 
-			const documentText = document.getText();
+		const documentText = document.getText();
 
-			const matches = documentText.match(CHATGPT_REGEX);
+		const chatLines = getChatLines(documentText);
+		if (!chatLines) {
+			vscode.window.showInformationMessage(MESSAGES.NO_CHAT_LINE);
+			return;
+		}
 
-			if (!matches) return;
+		for (const chatLine of chatLines) {
+			const index = documentText.indexOf(chatLine);
 
-			for (const match of matches) {
-				const index = documentText.indexOf(match);
-				const startPos = editor.document.positionAt(index);
-				const endPos = editor.document.positionAt(index + match.length);
-				const range = new vscode.Range(startPos, endPos);
+			editor.edit(editBuilder => {
+				const startLine = document.lineAt(editor.document.positionAt(index).line);
+				editBuilder.insert(startLine.range.end, ` ${MESSAGES.GENERATING}`);
+			});
 
-				const matchWaitText = `${match} ${WAIT_TEXT}`;
-				editor.edit(editBuilder => editBuilder.replace(range, matchWaitText));
+			const chatText = chatLine.replace("// @chat", "");
 
-				const text = match.replace("// @chat", "");
+			// prevent the next request to be sent if it's still waiting for response
+			if (CHAT_LINE_REQUESTS.includes(chatText)) return;
+			CHAT_LINE_REQUESTS.push(chatText);
 
-				// prevent the next request to be sent if it's still waiting for response
-				if (MESSAGE_REQUESTS.includes(text)) return;
+			const response = await api.sendMessage(chatText);
 
-				MESSAGE_REQUESTS.push(text);
-				const response = await api.sendMessage(text);
-
-				const markdownMatches = response.match(MARKDOWN_REGEX);
-
-				if (!markdownMatches) return;
-
-				let output = '';
-
-				for (const markdownMatch of markdownMatches) {
-					output += markdownMatch.slice(3, -3);
-				}
-
-				editor.edit(editBuilder => {
-					const endPos = editor.document.positionAt(index + matchWaitText.length);
-					const range = new vscode.Range(startPos, endPos);
-					editBuilder.replace(range, output);
-				});
-
-				MESSAGE_REQUESTS.splice(MESSAGE_REQUESTS.indexOf(text), 1);
+			const markdowns = getMarkdowns(response);
+			if (!markdowns) {
+				vscode.window.showErrorMessage(MESSAGES.NO_MARKDOWN);
+				return;
 			}
+
+			editor.edit(editBuilder => {
+				const startLine = document.lineAt(editor.document.positionAt(index).line);
+				editBuilder.replace(startLine.range, markdowns.join(''));
+			});
+
+			CHAT_LINE_REQUESTS.splice(CHAT_LINE_REQUESTS.indexOf(chatText), 1);
 		}
 	});
 };
