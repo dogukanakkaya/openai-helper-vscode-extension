@@ -2,6 +2,10 @@
 
 This extension helps you to use ChatGPT in Visual Studio Code
 
+**:warning: Since the API that this project uses is unofficial, you might face 403 or 429 HTTP errors and maybe future breaks if OpenAI change things. Also some features/fixes of newer versions of the API module requires Node.js >=18 but latest VSCode version runs Electron with Node 16 and it cannot be changed. A workaround may written but I see that unnecessary since there is no official API (https://github.com/transitive-bullshit/chatgpt-api/issues/137). Maybe I'll reimplement this later when official API is out (or be lazy enough not to)**
+
+<br>
+
 ![chatgpt-code](https://user-images.githubusercontent.com/51231605/207466689-8535f7a9-3ff0-463f-855b-a2776175965a.gif)
 
 ## Usage
@@ -31,7 +35,7 @@ You can access commands via pressing CMD + Shift + P (CTRL + Shift + P for Windo
 
 <br>
 
-## Todo
+## Todo [On Hold]
 
 - [x] Add refactor selection command
 - [ ] Stream the response instead of waiting for it to be finished
