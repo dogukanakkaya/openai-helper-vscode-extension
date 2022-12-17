@@ -2,7 +2,7 @@
 
 This extension helps you to use OpenAI products in Visual Studio Code
 
-**:warning: Since the ChatGPT API that this project uses is unofficial, you might face 403 or 429 HTTP errors with ChatGPT strategy and maybe future breaks if OpenAI change things. Also some features/fixes of newer versions of the API module requires Node.js >=18 but latest VSCode version runs Electron with Node 16 and it cannot be changed. A workaround may written but I see that unnecessary since there is no official API (https://github.com/transitive-bullshit/chatgpt-api/issues/137). Maybe I'll reimplement ChatGPT strategy this later when official API is out (or be lazy enough not to)**
+**:warning: For now only Codex usage is recommended since the ChatGPT API that this project uses is unofficial, you might face 403 or 429 HTTP errors with ChatGPT strategy and maybe future breaks if OpenAI change things. Also some features/fixes of newer versions of the API module requires Node.js >=18 but latest VSCode version runs Electron with Node 16 and it cannot be changed. A workaround may written but I see that unnecessary since there is no official API (https://github.com/transitive-bullshit/chatgpt-api/issues/137). Maybe I'll reimplement ChatGPT strategy this later when official API is out (or be lazy enough not to)**
 
 <br>
 
@@ -47,7 +47,8 @@ This extension helps you to use OpenAI products in Visual Studio Code
 ## Todo [On Hold]
 
 - [x] Add refactor selection command
-- [ ] Stream the response instead of waiting for it to be finished
+- [x] OpenAI Codex option
+- [ ] Stream the response for ChatGPT instead of waiting for it to be finished
 - [ ] Generate wait texts as placeholders instead of inserting comment lines to file
 - [ ] Analyze selected code and explain (why it's broken etc.)
 - [ ] Add create test for function command
