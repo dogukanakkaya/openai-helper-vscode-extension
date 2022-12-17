@@ -21,7 +21,7 @@ This extension helps you to use OpenAI products in Visual Studio Code
 <br>
 
 ### Generate @ai
-- Search for `OpenAI Helper: Generate @ai` command, press enter
+- Search for `OpenAI Helper: Generate` command, press enter
 - After that you'll see wait text for all of your comment lines starts with `@ai ...`
 - You'll get the response generated after a while (depending on the response time of ChatGPT/Codex APIs)
 
@@ -54,4 +54,5 @@ This extension helps you to use OpenAI products in Visual Studio Code
 - [ ] Add create test for function command
 - [ ] Run multiple `@ai` comments in parallel
 - [ ] Ability to create conversation and change the generated responses
+- [ ] After ChatGPT has an official API or unofficial one's problems are fixed separate Codex and ChatGPT completely with different commands
 - [ ] Write test
