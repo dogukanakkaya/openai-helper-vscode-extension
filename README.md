@@ -15,6 +15,8 @@ This extension helps you to use OpenAI products in Visual Studio Code
 - If you set ChatGPT Credentials then you'll be using ChatGPT
 - To change between, just empty the credentials of other one by setting them empty.
 
+<br>
+
 ### Set OpenAI Api Key
 You can get your api key from here: https://beta.openai.com/account/api-keys
 
