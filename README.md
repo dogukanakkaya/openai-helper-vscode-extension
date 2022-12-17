@@ -2,7 +2,7 @@
 
 This extension helps you to use OpenAI products in Visual Studio Code
 
-**:warning: Since the API that this project uses is unofficial, you might face 403 or 429 HTTP errors with ChatGPT strategy and maybe future breaks if OpenAI change things. Also some features/fixes of newer versions of the API module requires Node.js >=18 but latest VSCode version runs Electron with Node 16 and it cannot be changed. A workaround may written but I see that unnecessary since there is no official API (https://github.com/transitive-bullshit/chatgpt-api/issues/137). Maybe I'll reimplement ChatGPT strategy this later when official API is out (or be lazy enough not to)**
+**:warning: Since the ChatGPT API that this project uses is unofficial, you might face 403 or 429 HTTP errors with ChatGPT strategy and maybe future breaks if OpenAI change things. Also some features/fixes of newer versions of the API module requires Node.js >=18 but latest VSCode version runs Electron with Node 16 and it cannot be changed. A workaround may written but I see that unnecessary since there is no official API (https://github.com/transitive-bullshit/chatgpt-api/issues/137). Maybe I'll reimplement ChatGPT strategy this later when official API is out (or be lazy enough not to)**
 
 <br>
 
