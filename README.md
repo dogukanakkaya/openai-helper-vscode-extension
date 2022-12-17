@@ -44,10 +44,11 @@ This extension helps you to use OpenAI products in Visual Studio Code
 
 <br>
 
-## Todo [On Hold]
+## Todo
 
 - [x] Add refactor selection command
 - [x] OpenAI Codex option
+- [ ] Add image generation command
 - [ ] Stream the response for ChatGPT instead of waiting for it to be finished
 - [ ] Generate wait texts as placeholders instead of inserting comment lines to file
 - [ ] Analyze selected code and explain (why it's broken etc.)
