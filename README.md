@@ -9,16 +9,21 @@ This extension helps you to use OpenAI products in Visual Studio Code
 ![code_generation](https://user-images.githubusercontent.com/51231605/208255187-1eebaadb-c7d2-4113-883f-5a273d01bec0.gif)
 
 ## Usage
-- For Codex usages, you can get your api key from here: https://beta.openai.com/account/api-keys
+
 - You can access commands via pressing CMD + Shift + P (CTRL + Shift + P for Windows)
 - If you set OpenAI Api Key then you'll be using Codex
 - If you set ChatGPT Credentials then you'll be using ChatGPT
 - To change between, just empty the credentials of other one by setting them empty.
 
 ### Set OpenAI Api Key
+You can get your api key from here: https://beta.openai.com/account/api-keys
+
 <br>
 
 ### Set ChatGPT Credentials
+You can get your credentials from `Developer Tools -> Application Tab -> Cookies` and then get session token and clearance token from there.
+Reason why: see warning above for more info.
+
 <br>
 
 ### Generate @ai
