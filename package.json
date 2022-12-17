@@ -1,7 +1,7 @@
 {
-  "name": "chatgpt-code",
-  "displayName": "ChatGPT Code",
-  "description": "This extension helps you to use ChatGPT in Visual Studio Code",
+  "name": "openai-helper",
+  "displayName": "OpenAI Helper",
+  "description": "This extension helps you to use OpenAI products in Visual Studio Code",
   "version": "0.0.8",
   "icon": "icon.png",
   "publisher": "dogukanakkaya",
@@ -17,19 +17,29 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:chatgpt-code.generate",
-    "onCommand:chatgpt-code.refactor"
+    "onCommand:openai-helper.generate",
+    "onCommand:openai-helper.refactor",
+    "onCommand:openai-helper.setOpenAIApiKey",
+    "onCommand:openai-helper.setChatGPTCredentials"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "chatgpt-code.generate",
-        "title": "ChatGPT Code: Generate @chat"
+        "command": "openai-helper.generate",
+        "title": "OpenAI Helper: Generate"
       },
       {
-        "command": "chatgpt-code.refactor",
-        "title": "ChatGPT Code: Refactor Selection"
+        "command": "openai-helper.refactor",
+        "title": "OpenAI Helper: Refactor Selection"
+      },
+      {
+        "command": "openai-helper.setOpenAIApiKey",
+        "title": "OpenAI Helper: Set OpenAI Api Key"
+      },
+      {
+        "command": "openai-helper.setChatGPTCredentials",
+        "title": "OpenAI Helper: Set ChatGPT Credentials"
       }
     ]
   },
@@ -56,6 +66,7 @@
     "eslint": "^8.28.0",
     "glob": "^8.0.3",
     "mocha": "^10.1.0",
+    "openai": "^3.1.0",
     "ts-loader": "^9.4.1",
     "typescript": "^4.9.3",
     "webpack": "^5.75.0",
