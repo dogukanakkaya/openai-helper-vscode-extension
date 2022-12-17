@@ -16,7 +16,6 @@ export default class Codex implements Strategy {
     //   prompt: input,
     //   temperature: 0,
     //   max_tokens: 1024,
-    //   top_p: 1.0,
     //   frequency_penalty: 0.5,
     //   presence_penalty: 0.0,
     //   stream: false
@@ -26,8 +25,7 @@ export default class Codex implements Strategy {
       model: 'code-davinci-edit-001',
       input: '',
       instruction: input,
-      temperature: 0,
-      top_p: 1.0
+      temperature: 0
     });
 
     return data.choices[0].text ? unescapeChars(data.choices[0].text) : null;
@@ -38,8 +36,7 @@ export default class Codex implements Strategy {
       model: 'code-davinci-edit-001',
       input,
       instruction: 'Refactor this function',
-      temperature: 0,
-      top_p: 1.0
+      temperature: 0
     });
 
     return data.choices[0].text ? unescapeChars(data.choices[0].text) : null;

@@ -1,5 +1,6 @@
 const MARKDOWN_REGEX = /```[\s\S]*?```/g;
 const GENERATOR_REGEX = /^\/\/ @ai.*$/gm;
+// const CODE_TAGS_REGEX = /^<code>([\s\S]*?)<\/code>/gm;
 
 export const getMarkdowns = (text: string) => {
   const markdownMatches = text.match(MARKDOWN_REGEX);
@@ -12,8 +13,7 @@ export const getGeneratorLines = (text: string) => {
 };
 
 // export const getCodeTags = (text: string) => {
-//   const codeRegex = /^<code>([\s\S]*?)<\/code>/gm;
-//   const matches = text.match(codeRegex);
+//   const matches = text.match(CODE_TAGS_REGEX);
 //   return matches ? matches.map(match => match.slice(6, -7)) : [];
 // };
 
