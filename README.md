@@ -6,7 +6,7 @@ This extension helps you to use OpenAI products in Visual Studio Code
 
 <br>
 
-![openai-helper-gif](https://user-images.githubusercontent.com/51231605/208245578-f36d8b18-bac8-46a7-9f3b-d2d0a45a9c87.gif)
+![codex](https://user-images.githubusercontent.com/51231605/208255187-1eebaadb-c7d2-4113-883f-5a273d01bec0.gif)
 
 ## Usage
  - You can access commands via pressing CMD + Shift + P (CTRL + Shift + P for Windows)
@@ -31,6 +31,15 @@ This extension helps you to use OpenAI products in Visual Studio Code
 - Select the function or code piece you want to refactor, search for `OpenAI Helper: Refactor Selection` command, press enter
 - After that you'll see wait text for your selection
 - You'll get the response generated after a while (depending on the response time of ChatGPT/Codex APIs)
+
+<br>
+
+### Image Generation
+- Search for `OpenAI Helper: Image Generation` command, press enter
+- After that you'll need to answer several questions about the image
+- The generated image will be saved to your working directory
+
+![image-generation](https://user-images.githubusercontent.com/51231605/208255255-b57e3fb7-ffaa-4a4f-979a-d16f2b176c18.gif)
 
 <br>
 
