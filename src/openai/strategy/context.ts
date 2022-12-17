@@ -11,6 +11,6 @@ export default class Context {
 }
 
 export interface Strategy {
-  generate(input: string): Promise<string[] | null>;
+  generate(input: string): Promise<string | null>;
   refactor(input: string): Promise<string | null>;
 }

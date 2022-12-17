@@ -11,11 +11,11 @@ export const getGeneratorLines = (text: string) => {
   return text.match(GENERATOR_REGEX);
 };
 
-export const getCodeTags = (text: string) => {
-  const codeRegex = /^<code>([\s\S]*?)<\/code>/gm;
-  const matches = text.match(codeRegex);
-  return matches ? matches.map(match => match.slice(6, -7)) : [];
-};
+// export const getCodeTags = (text: string) => {
+//   const codeRegex = /^<code>([\s\S]*?)<\/code>/gm;
+//   const matches = text.match(codeRegex);
+//   return matches ? matches.map(match => match.slice(6, -7)) : [];
+// };
 
 export const unescapeChars = (text: string) => {
   return text.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');

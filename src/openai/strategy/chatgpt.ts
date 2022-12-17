@@ -16,7 +16,7 @@ export default class ChatGPT implements Strategy {
     const response = await this.#api.sendMessage(input);
     const markdowns = getMarkdowns(response);
 
-    return markdowns ?? null;
+    return markdowns?.join('') ?? null;
   }
 
   async refactor(input: string) {

@@ -20,7 +20,8 @@
     "onCommand:openai-helper.generate",
     "onCommand:openai-helper.refactor",
     "onCommand:openai-helper.setOpenAIApiKey",
-    "onCommand:openai-helper.setChatGPTCredentials"
+    "onCommand:openai-helper.setChatGPTCredentials",
+    "onCommand:openai-helper.imageGeneration"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -40,6 +41,10 @@
       {
         "command": "openai-helper.setChatGPTCredentials",
         "title": "OpenAI Helper: Set ChatGPT Credentials"
+      },
+      {
+        "command": "openai-helper.imageGeneration",
+        "title": "OpenAI Helper: Image Generation"
       }
     ]
   },
