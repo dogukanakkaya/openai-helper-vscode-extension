@@ -1,4 +1,4 @@
-// Until some fixes have been done or official api for chatgpt released this will stay. Because unoffical module has some issues that prevents to use chatgpt with new version
+// Until some fixes have been done or official api for chatgpt released this will stay. Because unofficial module has some issues that prevents to use chatgpt with new version
 
 // import { ChatGPTAPIBrowser } from 'chatgpt';
 // import { Strategy } from './context';
