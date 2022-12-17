@@ -9,8 +9,6 @@ import * as path from 'node:path';
 import * as https from 'node:https';
 import { Transform } from 'node:stream';
 
-const SENT_REQUESTS: string[] = [];
-
 const ask = (name: string) => {
   return vscode.window.showInputBox({ prompt: `Enter ${name}`, ignoreFocusOut: true });
 };
@@ -59,10 +57,6 @@ export const generateCommand = async (context: vscode.ExtensionContext) => {
 
     const input = generatorLine.replace(GENERATOR_LINE_MATCH, '');
 
-    // prevent the next request to be sent if it's still waiting for response
-    if (SENT_REQUESTS.includes(input)) return;
-    SENT_REQUESTS.push(input);
-
     const response = await strategy.generate(input);
 
     if (!response) return; // @todo handle
@@ -70,8 +64,6 @@ export const generateCommand = async (context: vscode.ExtensionContext) => {
     await vscode.commands.executeCommand('editor.action.insertLineAfter', startLine.lineNumber);
 
     editor.edit(editBuilder => editBuilder.replace(editor.document.lineAt(startLine.lineNumber).range, response));
-
-    SENT_REQUESTS.splice(SENT_REQUESTS.indexOf(input), 1);
   }
 };
 
