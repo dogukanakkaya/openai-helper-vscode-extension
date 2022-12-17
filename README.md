@@ -6,7 +6,7 @@ This extension helps you to use OpenAI products in Visual Studio Code
 
 <br>
 
-![chatgpt-code](https://user-images.githubusercontent.com/51231605/207466689-8535f7a9-3ff0-463f-855b-a2776175965a.gif)
+![openai-helper-gif](https://user-images.githubusercontent.com/51231605/208245578-f36d8b18-bac8-46a7-9f3b-d2d0a45a9c87.gif)
 
 ## Usage
  - You can access commands via pressing CMD + Shift + P (CTRL + Shift + P for Windows)
