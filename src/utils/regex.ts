@@ -1,5 +1,5 @@
 const MARKDOWN_REGEX = /```[\s\S]*?```/g;
-const CHATGPT_REGEX = /^\/\/ @ai.*$/gm;
+const GENERATOR_REGEX = /^\/\/ @ai.*$/gm;
 
 export const getMarkdowns = (text: string) => {
   const markdownMatches = text.match(MARKDOWN_REGEX);
@@ -8,7 +8,7 @@ export const getMarkdowns = (text: string) => {
 };
 
 export const getGeneratorLines = (text: string) => {
-  return text.match(CHATGPT_REGEX);
+  return text.match(GENERATOR_REGEX);
 };
 
 export const getCodeTags = (text: string) => {
