@@ -1,8 +1,8 @@
 {
-  "name": "openai-helper",
+  "name": "chatgpt-code",
   "displayName": "OpenAI Helper",
   "description": "This extension helps you to use OpenAI products in Visual Studio Code",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "icon": "icon.png",
   "publisher": "dogukanakkaya",
   "license": "MIT",
