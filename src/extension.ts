@@ -5,7 +5,7 @@ import Context from './openai/strategy/context';
 import Codex from './openai/strategy/codex';
 import ChatGPT from './openai/strategy/chatgpt';
 
-const PROMPT_REQUESTS: string[] = [];
+const SENT_REQUESTS: string[] = [];
 
 const ask = (name: string) => {
   return vscode.window.showInputBox({ prompt: `Enter ${name}`, ignoreFocusOut: true });
@@ -53,13 +53,13 @@ export const generateCommand = async (context: vscode.ExtensionContext) => {
 
     editor.edit(editBuilder => editBuilder.insert(startLine.range.end, ` ${MESSAGES.GENERATING}`)); // instead of comment lines, add git blame like info lines
 
-    const prompt = generatorLine.replace(GENERATOR_LINE_MATCH, '');
+    const input = generatorLine.replace(GENERATOR_LINE_MATCH, '');
 
     // prevent the next request to be sent if it's still waiting for response
-    if (PROMPT_REQUESTS.includes(prompt)) return;
-    PROMPT_REQUESTS.push(prompt);
+    if (SENT_REQUESTS.includes(input)) return;
+    SENT_REQUESTS.push(input);
 
-    const response = await strategy.generate(prompt);
+    const response = await strategy.generate(input);
 
     if (!response) return; // @todo handle
 
@@ -67,7 +67,7 @@ export const generateCommand = async (context: vscode.ExtensionContext) => {
 
     editor.edit(editBuilder => editBuilder.replace(editor.document.lineAt(startLine.lineNumber + 1).range, response[0]));
 
-    PROMPT_REQUESTS.splice(PROMPT_REQUESTS.indexOf(prompt), 1);
+    SENT_REQUESTS.splice(SENT_REQUESTS.indexOf(input), 1);
   }
 };
 
